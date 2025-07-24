@@ -1,0 +1,161 @@
+// ✅ File: index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capital Global Bank</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+
+// ✅ File: src/App.jsx
+import { useState } from 'react';
+
+const correctUsername = "Andre312";
+const correctPassword = "Dre4u";
+
+export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [view, setView] = useState("dashboard");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (username === correctUsername && password === correctPassword) {
+      setLoggedIn(true);
+    } else {
+      alert("Incorrect username or password.");
+    }
+  };
+
+  if (!loggedIn) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-100">
+        <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-96">
+          <h1 className="text-2xl font-bold mb-4 text-center">Capital Global Bank</h1>
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="border p-2 w-full mb-4" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="border p-2 w-full mb-4" />
+          <button type="submit" className="bg-blue-600 text-white px-4 py-2 w-full rounded">Login</button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-8 font-sans bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-blue-700">Welcome to Capital Global Bank</h1>
+      {view === "dashboard" && (
+        <>
+          <div className="bg-white p-6 rounded shadow mb-4">
+            <h2 className="text-xl font-semibold mb-2">Account Balance</h2>
+            <p className="text-2xl text-green-600">$30,000,000</p>
+          </div>
+          <div className="bg-white p-6 rounded shadow mb-4">
+            <h2 className="text-xl font-semibold mb-2">Withdrawable Balance</h2>
+            <p className="text-2xl text-green-600">$28,934,089</p>
+          </div>
+          <button onClick={() => setView("withdraw")} className="bg-yellow-500 text-white px-4 py-2 rounded">Withdraw</button>
+        </>
+      )}
+      {view === "withdraw" && (
+        <div className="bg-white p-6 rounded shadow">
+          <h2 className="text-xl font-semibold mb-4">Withdrawal Form</h2>
+          <input type="text" placeholder="Enter amount" className="border p-2 w-full mb-4" />
+          <button onClick={() => alert("Authorization Code needed to complete withdrawal. Please contact your account officer.")} className="bg-red-600 text-white px-4 py-2 rounded">Submit Withdrawal</button>
+          <button onClick={() => setView("dashboard")} className="ml-4 text-blue-600">Back to Dashboard</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ✅ File: src/main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+
+// ✅ File: src/index.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+// ✅ File: package.json
+{
+  "name": "capital-global-bank",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0",
+    "tailwindcss": "^3.0.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  }
+}
+
+
+// ✅ File: vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    outDir: 'dist'
+  }
+});
+
+
+// ✅ File: tailwind.config.js
+module.exports = {
+  content: ['./index.html', './src/**/*.{js,jsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+
+// ✅ File: postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+
+// ✅ File: vercel.json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
